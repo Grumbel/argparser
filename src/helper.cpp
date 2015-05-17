@@ -233,18 +233,6 @@ int from_float(float value, int min, int max)
   return static_cast<int>((value + 1.0f) / 2.0f * static_cast<float>(max - min)) + min;
 }
 
-int get_terminal_width()
-{
-  struct winsize w;
-  if (ioctl(0, TIOCGWINSZ, &w) < 0)
-  {
-    return 80;
-  }
-  else
-  {
-    return w.ws_col;
-  }
-}
 
 pid_t spawn_exe(const std::string& arg0)
 {

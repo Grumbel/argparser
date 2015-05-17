@@ -31,8 +31,6 @@ include_directories(include/)
 
 set(ARGPARSER_SOURCES_CXX
   src/arg_parser.cpp
-  src/helper.cpp
-  src/log.cpp
   src/pretty_printer.cpp)
 add_library(argparser ${ARGPARSER_SOURCES_CXX})
 
