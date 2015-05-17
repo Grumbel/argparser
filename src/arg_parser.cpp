@@ -354,35 +354,4 @@ ArgParser::add_option(int key,
   return *this;
 }
 
-#ifdef __TEST__
-
-// g++ src/arg_parser.cpp -o arg_parser_test -Wall -O2 -Werror -D__TEST__
-
-int main(int argc, char** argv)
-{
-  try
-  {
-    ArgParser argp;
-
-    argp
-      .add_usage("bar [FILES]... [BLA]..")
-      .add_usage("foo [FILES]... [BLA]..")
-      .add_text("Dies und das")
-      .add_newline()
-      .add_option(1, 'v', "version", "", "Help text");
-
-    argp.parse_args(argc, argv);
-
-    argp.print_help(std::cout);
-
-    return 0;
-  }
-  catch(std::exception& err)
-  {
-    std::cout << "Error: " << err.what() << std::endl;
-  }
-}
-
-#endif
-
 /* EOF */

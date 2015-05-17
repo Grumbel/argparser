@@ -15,11 +15,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <arg_parser.hpp>
+#include <iostream>
 
-int main()
+int main(int argc, char** argv)
 {
-  ArgParser parser;
-  return 0;
+  try
+  {
+    ArgParser parser;
+
+    parser
+      .add_usage("bar [FILES]... [BLA]..")
+      .add_usage("foo [FILES]... [BLA]..")
+      .add_text("Dies und das")
+      .add_newline()
+      .add_option(1, 'v', "version", "", "Help text");
+
+    parser.parse_args(argc, argv);
+
+    return 0;
+  }
+  catch(const std::exception& err)
+  {
+    std::cout << "Error: " << err.what() << std::endl;
+    return 1;
+  }
 }
 
 /* EOF */
