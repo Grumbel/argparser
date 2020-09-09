@@ -14,11 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_ARG_PARSER_HPP
-#define HEADER_ARG_PARSER_HPP
+#ifndef HEADER_ARGPARSER_ARG_PARSER_HPP
+#define HEADER_ARGPARSER_ARG_PARSER_HPP
 
 #include <vector>
 #include <string>
+
+namespace argparser {
 
 class ArgParser
 {
@@ -108,6 +110,8 @@ private:
   typedef std::vector<Option> Options;
   Options options;
 };
+
+} // namespace argparser
 
 #endif
 

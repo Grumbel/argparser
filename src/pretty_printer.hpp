@@ -16,12 +16,14 @@
 **  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef HEADER_PRETTY_PRINTER_HPP
-#define HEADER_PRETTY_PRINTER_HPP
+#ifndef HEADER_ARGPARSER_PRETTY_PRINTER_HPP
+#define HEADER_ARGPARSER_PRETTY_PRINTER_HPP
 
 #include <string_view>
 #include <ostream>
 #include <iostream>
+
+namespace argparser {
 
 class PrettyPrinter
 {
@@ -35,6 +37,8 @@ private:
   int terminal_width;
   std::ostream& m_out;
 };
+
+} // namespace argparser
 
 #endif
 

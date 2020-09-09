@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 {
   try
   {
-    ArgParser parser;
+    argparser::ArgParser parser;
 
     parser
       .add_usage("bar [FILES]... [BLA]..")

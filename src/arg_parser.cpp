@@ -45,6 +45,8 @@ int get_terminal_width()
 
 } // namespace
 
+namespace argparser {
+
 ArgParser::ArgParser() :
   programm(),
   options()
@@ -378,5 +380,7 @@ ArgParser::add_option(int key,
 
   return *this;
 }
+
+} // namespace argparser
 
 /* EOF */

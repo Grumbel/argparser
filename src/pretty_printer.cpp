@@ -20,6 +20,8 @@
 
 #include <iostream>
 
+namespace argparser {
+
 PrettyPrinter::PrettyPrinter(int terminal_width_, std::ostream& out) :
   terminal_width(terminal_width_),
   m_out(out)
@@ -124,5 +126,7 @@ PrettyPrinter::print(std::string_view indent, std::string_view initial, std::str
   m_out << text.substr(word_begin);
   m_out << std::endl;
 }
+
+} // namespace argparser
 
 /* EOF */
