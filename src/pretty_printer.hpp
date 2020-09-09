@@ -19,18 +19,21 @@
 #ifndef HEADER_PRETTY_PRINTER_HPP
 #define HEADER_PRETTY_PRINTER_HPP
 
-#include <string>
+#include <string_view>
+#include <ostream>
+#include <iostream>
 
 class PrettyPrinter
 {
 public:
-  PrettyPrinter(int terminal_width);
+  PrettyPrinter(int terminal_width, std::ostream& out = std::cout);
 
-  void print(const std::string& str) const;
-  void print(const std::string& indent_str, const std::string& left, const std::string& str) const;
+  void print(std::string_view text) const;
+  void print(std::string_view indent, std::string_view initial, std::string_view text) const;
 
 private:
   int terminal_width;
+  std::ostream& m_out;
 };
 
 #endif

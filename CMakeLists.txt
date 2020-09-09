@@ -24,17 +24,32 @@ include(ClangTidy)
 
 option(BUILD_TESTS "Build tests" OFF)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 add_library(argparser
   src/arg_parser.cpp
   src/pretty_printer.cpp)
-target_include_directories(argparser PUBLIC include/)
+target_include_directories(argparser PUBLIC include/ src/)
 target_compile_options(argparser PRIVATE ${WARNINGS_CXX_FLAGS})
 
 if(BUILD_TESTS)
   enable_testing()
-  add_executable(argparser_test test/argparser_test.cpp)
-  target_link_libraries(argparser_test argparser)
-  target_compile_options(argparser_test PRIVATE ${WARNINGS_CXX_FLAGS})
+
+  file(GLOB TEST_ARGPARSER_SOURCES test/*_test.cpp)
+
+  foreach(SRC ${TEST_ARGPARSER_SOURCES})
+    get_filename_component(SRC_BASENAME ${SRC} NAME_WE)
+    add_executable(${SRC_BASENAME} ${SRC})
+    target_link_libraries(${SRC_BASENAME} argparser)
+    target_compile_options(${SRC_BASENAME} PRIVATE ${WARNINGS_CXX_FLAGS})
+
+    add_test(NAME ${SRC_BASENAME}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND "${SRC_BASENAME}")
+  endforeach()
 endif()
 
 # EOF #
