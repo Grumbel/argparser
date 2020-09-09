@@ -19,6 +19,7 @@ project(argparser)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/mk/cmake)
 
+include(GNUInstallDirs)
 include(MaximumWarnings)
 include(ClangTidy)
 
@@ -34,6 +35,7 @@ add_library(argparser
   src/pretty_printer.cpp)
 target_include_directories(argparser PUBLIC include/ src/)
 target_compile_options(argparser PRIVATE ${WARNINGS_CXX_FLAGS})
+set_target_properties(argparser PROPERTIES PUBLIC_HEADER "include/arg_parser.hpp")
 
 if(BUILD_TESTS)
   enable_testing()
@@ -47,9 +49,13 @@ if(BUILD_TESTS)
     target_compile_options(${SRC_BASENAME} PRIVATE ${WARNINGS_CXX_FLAGS})
 
     add_test(NAME ${SRC_BASENAME}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       COMMAND "${SRC_BASENAME}")
   endforeach()
 endif()
+
+install(TARGETS argparser
+  LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+  PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/${PROJECT_NAME}")
 
 # EOF #
