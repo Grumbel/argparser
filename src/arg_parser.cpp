@@ -187,7 +187,7 @@ ArgParser::lookup_short_option(char short_option)
     if (i->short_option == short_option)
       return &(*i);
   }
-  return 0;
+  return nullptr;
 }
 
 ArgParser::Option*
@@ -198,7 +198,7 @@ ArgParser::lookup_long_option(const std::string& long_option)
     if (i->long_option == long_option)
       return &*i;
   }
-  return 0;
+  return nullptr;
 }
 
 void
@@ -216,10 +216,10 @@ ArgParser::print_help(std::ostream& out) const
         width += 2; // "-a"
 
       if (!i->long_option.empty())
-        width += i->long_option.size() + 2; // "--foobar"
+        width += static_cast<int>(i->long_option.size()) + 2; // "--foobar"
 
       if (!i->argument.empty())
-        width += i->argument.size() + 1;
+        width += static_cast<int>(i->argument.size()) + 1;
 
       column_width = std::max(column_width, width);
     }

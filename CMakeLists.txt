@@ -17,27 +17,23 @@
 cmake_minimum_required(VERSION 3.0)
 project(argparser)
 
-set(WARNINGS 0 CACHE BOOL "Switch on extra warnings")
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/mk/cmake)
 
-if(WARNINGS)
-  set(WARNINGS_CXX_FLAGS
-    -pedantic -Wall -Wextra -Wno-c++0x-compat -Wnon-virtual-dtor -Weffc++
-    -Wconversion -Werror -Wshadow -Wcast-qual -Winit-self -Wno-unused-parameter)
-  # -Winline -Wfloat-equal -Wunreachable-code
-endif()
+include(MaximumWarnings)
 
-include_directories(include/)
 option(BUILD_TESTS "Build tests" OFF)
 
-set(ARGPARSER_SOURCES_CXX
+add_library(argparser
   src/arg_parser.cpp
   src/pretty_printer.cpp)
-add_library(argparser ${ARGPARSER_SOURCES_CXX})
+target_include_directories(argparser PUBLIC include/)
+target_compile_options(argparser PRIVATE ${WARNINGS_CXX_FLAGS})
 
 if(BUILD_TESTS)
   enable_testing()
   add_executable(argparser_test test/argparser_test.cpp)
   target_link_libraries(argparser_test argparser)
+  target_compile_options(argparser_test PRIVATE ${WARNINGS_CXX_FLAGS})
 endif()
 
 # EOF #
