@@ -16,6 +16,7 @@
 
 #include "arg_parser.hpp"
 
+#include <array>
 #include <assert.h>
 #include <stdio.h>
 #include <ostream>
@@ -26,12 +27,15 @@
 
 namespace {
 
+constexpr int max_column_width = 5;
+constexpr int default_terminal_width = 80;
+
 int get_terminal_width()
 {
   struct winsize w;
   if (ioctl(0, TIOCGWINSZ, &w) < 0)
   {
-    return 80;
+    return default_terminal_width;
   }
   else
   {
@@ -90,7 +94,7 @@ ArgParser::parse_args(int argc, char** argv)
           }
 
           // Long Option
-          Option* option = lookup_long_option(long_opt);
+          Option const* option = lookup_long_option(long_opt);
 
           if (option)
           {
@@ -135,7 +139,7 @@ ArgParser::parse_args(int argc, char** argv)
           while (*p)
           {
             // Short option(s)
-            Option* option = lookup_short_option(*p);
+            Option const* option = lookup_short_option(*p);
 
             if (option)
             {
@@ -179,24 +183,26 @@ ArgParser::parse_args(int argc, char** argv)
   return parsed_options;
 }
 
-ArgParser::Option*
-ArgParser::lookup_short_option(char short_option)
+ArgParser::Option const*
+ArgParser::lookup_short_option(char short_option) const
 {
-  for(Options::iterator i = options.begin(); i != options.end(); ++i)
+  for(auto const& opt : options)
   {
-    if (i->short_option == short_option)
-      return &(*i);
+    if (opt.short_option == short_option) {
+      return &opt;
+    }
   }
   return nullptr;
 }
 
-ArgParser::Option*
-ArgParser::lookup_long_option(const std::string& long_option)
+ArgParser::Option const*
+ArgParser::lookup_long_option(const std::string& long_option) const
 {
-  for(Options::iterator i = options.begin(); i != options.end(); ++i)
+  for(auto const& opt : options)
   {
-    if (i->long_option == long_option)
-      return &*i;
+    if (opt.long_option == long_option) {
+      return &opt;
+    }
   }
   return nullptr;
 }
@@ -209,17 +215,20 @@ ArgParser::print_help(std::ostream& out) const
   int column_width = column_min_width;
 
   { // Calculate left column width
-    for(Options::const_iterator i = options.begin(); i != options.end(); ++i)
+    for(auto const& opt : options)
     {
       int width = 2; // add two leading space
-      if (i->short_option)
+      if (opt.short_option) {
         width += 2; // "-a"
+      }
 
-      if (!i->long_option.empty())
-        width += static_cast<int>(i->long_option.size()) + 2; // "--foobar"
+      if (!opt.long_option.empty()) {
+        width += static_cast<int>(opt.long_option.size()) + 2; // "--foobar"
+      }
 
-      if (!i->argument.empty())
-        width += static_cast<int>(i->argument.size()) + 1;
+      if (!opt.argument.empty()) {
+        width += static_cast<int>(opt.argument.size()) + 1;
+      }
 
       column_width = std::max(column_width, width);
     }
@@ -230,67 +239,66 @@ ArgParser::print_help(std::ostream& out) const
   if (terminal_width < column_width * 3)
   {
     column_width -= (column_width*3 - terminal_width);
-    column_width = std::max(column_width, 5);
+    column_width = std::max(column_width, max_column_width);
   }
 
   PrettyPrinter pprint(terminal_width); // -1 so we have a whitespace on the right side
 
   bool first_usage = true;
-  for(Options::const_iterator i = options.begin(); i != options.end(); ++i)
+  for(auto const& opt : options)
   {
-    if (i->visible)
+    if (opt.visible)
     {
-      if (i->key == USAGE)
+      if (opt.key == USAGE)
       {
         if (first_usage)
         {
-          out << "Usage: " << programm << " " <<  i->help << std::endl;
+          out << "Usage: " << programm << " " <<  opt.help << std::endl;
           first_usage = false;
         }
         else
         {
-          out << "       " << programm << " " << i->help << std::endl;
+          out << "       " << programm << " " << opt.help << std::endl;
         }
       }
-      else if (i->key == TEXT)
+      else if (opt.key == TEXT)
       {
-        pprint.print(i->help);
+        pprint.print(opt.help);
       }
-      else if (i->key == PSEUDO)
+      else if (opt.key == PSEUDO)
       {
-        pprint.print(std::string(column_width, ' '), i->long_option, i->help);
+        pprint.print(std::string(column_width, ' '), opt.long_option, opt.help);
       }
       else
       {
-        char option[256]   = { 0 };
-        char argument[256] = { 0 };
+        constexpr size_t buffer_size = 256;
+        std::array<char, buffer_size> option   = { 0 };
+        std::array<char, buffer_size> argument = { 0 };
 
-        if (i->short_option)
+        if (opt.short_option)
         {
-          if (i->long_option.empty())
-            snprintf(option, 256, "-%c", i->short_option);
-          else
-            snprintf(option, 256, "-%c, --%s", i->short_option, i->long_option.c_str());
+          if (opt.long_option.empty()) {
+            snprintf(option.data(), option.size(), "-%c", opt.short_option);
+          } else {
+            snprintf(option.data(), option.size(), "-%c, --%s", opt.short_option, opt.long_option.c_str());
+          }
         }
         else
         {
-          snprintf(option, 256, "--%s", i->long_option.c_str());
+          snprintf(option.data(), option.size(), "--%s", opt.long_option.c_str());
         }
 
-        if (!i->argument.empty())
+        if (!opt.argument.empty())
         {
-          if (i->long_option.empty())
-            snprintf(argument, 256, " %s", i->argument.c_str());
-          else
-            snprintf(argument, 256, " %s", i->argument.c_str());
+          snprintf(argument.data(), argument.size(), " %s", opt.argument.c_str());
         }
 
         std::string left_column("  ");
-        left_column += option;
-        left_column += argument;
+        left_column += option.data();
+        left_column += argument.data();
         left_column += " ";
 
-        pprint.print(std::string(column_width, ' '), left_column, i->help);
+        pprint.print(std::string(column_width, ' '), left_column, opt.help);
       }
     }
   }
@@ -334,12 +342,12 @@ ArgParser::add_newline()
 }
 
 ArgParser&
-ArgParser::add_text(const std::string& grouptopic)
+ArgParser::add_text(const std::string& text)
 {
   Option option;
 
   option.key          = TEXT;
-  option.help         = grouptopic;
+  option.help         = text;
   option.visible      = true;
 
   options.push_back(option);

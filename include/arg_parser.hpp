@@ -69,19 +69,13 @@ public:
     PSEUDO    = -6
   };
 
-private:
-  std::string programm;
-
-  typedef std::vector<Option> Options;
-  Options options;
-
 public:
   typedef std::vector<ParsedOption> ParsedOptions;
 
   ArgParser();
 
   ArgParser& add_usage(const std::string& usage);
-  ArgParser& add_text(const std::string& doc);
+  ArgParser& add_text(const std::string& text);
   ArgParser& add_pseudo(const std::string& left, const std::string& doc);
   ArgParser& add_newline();
 
@@ -103,10 +97,16 @@ private:
   void read_option(int id, const std::string& argument);
 
   /** Find the Option structure that matches \a short_option */
-  Option* lookup_short_option(char short_option);
+  Option const* lookup_short_option(char short_option) const;
 
   /** Find the Option structure that matches \a long_option */
-  Option* lookup_long_option (const std::string& long_option);
+  Option const* lookup_long_option (const std::string& long_option) const;
+
+private:
+  std::string programm;
+
+  typedef std::vector<Option> Options;
+  Options options;
 };
 
 #endif

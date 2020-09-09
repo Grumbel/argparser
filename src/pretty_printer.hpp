@@ -20,23 +20,19 @@
 #define HEADER_PRETTY_PRINTER_HPP
 
 #include <string>
-
+
 class PrettyPrinter
 {
-private:
-  int terminal_width;
-
 public:
   PrettyPrinter(int terminal_width);
 
-  void print(const std::string& str);
-  void print(const std::string& indent_str, const std::string& left, const std::string& str);
+  void print(const std::string& str) const;
+  void print(const std::string& indent_str, const std::string& left, const std::string& str) const;
 
 private:
-  PrettyPrinter(const PrettyPrinter&);
-  PrettyPrinter& operator=(const PrettyPrinter&);
+  int terminal_width;
 };
-
+
 #endif
 
 /* EOF */
