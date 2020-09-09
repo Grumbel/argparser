@@ -20,6 +20,7 @@ project(argparser)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/mk/cmake)
 
 include(MaximumWarnings)
+include(ClangTidy)
 
 option(BUILD_TESTS "Build tests" OFF)
 
