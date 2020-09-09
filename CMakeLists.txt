@@ -17,7 +17,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(argparser)
 
-set(BUILD_TESTS 0 CACHE BOOL "Build tests")
 set(WARNINGS 0 CACHE BOOL "Switch on extra warnings")
 
 if(WARNINGS)
@@ -28,13 +27,17 @@ if(WARNINGS)
 endif()
 
 include_directories(include/)
+option(BUILD_TESTS "Build tests" OFF)
 
 set(ARGPARSER_SOURCES_CXX
   src/arg_parser.cpp
   src/pretty_printer.cpp)
 add_library(argparser ${ARGPARSER_SOURCES_CXX})
 
-add_executable(argparser_test src/argparser_test.cpp)
-target_link_libraries(argparser_test argparser)
+if(BUILD_TESTS)
+  enable_testing()
+  add_executable(argparser_test test/argparser_test.cpp)
+  target_link_libraries(argparser_test argparser)
+endif()
 
 # EOF #
