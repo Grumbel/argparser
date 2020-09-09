@@ -73,7 +73,7 @@ ArgParser::parse_args(int argc, char** argv)
           ++i;
           while(i < argc)
           {
-            parsed_options.push_back(ParsedOption(ArgParser::REST_ARG, "", argv[i]));
+            parsed_options.push_back(ParsedOption{ArgParser::REST_ARG, "", argv[i]});
             ++i;
           }
         }
@@ -102,13 +102,13 @@ ArgParser::parse_args(int argc, char** argv)
           {
             if (option->argument.empty())
             {
-              parsed_options.push_back(ParsedOption(option->key, long_opt, ""));
+              parsed_options.push_back(ParsedOption{option->key, long_opt, ""});
             }
             else
             {
               if (pos != std::string::npos)
               {
-                parsed_options.push_back(ParsedOption(option->key, long_opt, long_opt_arg));
+                parsed_options.push_back(ParsedOption{option->key, long_opt, long_opt_arg});
               }
               else
               {
@@ -118,7 +118,7 @@ ArgParser::parse_args(int argc, char** argv)
                 }
                 else
                 {
-                  parsed_options.push_back(ParsedOption(option->key, long_opt, argv[i + 1]));
+                  parsed_options.push_back(ParsedOption{option->key, long_opt, argv[i + 1]});
                   ++i;
                 }
               }
@@ -147,7 +147,7 @@ ArgParser::parse_args(int argc, char** argv)
             {
               if (option->argument.empty())
               {
-                parsed_options.push_back(ParsedOption(option->key, std::string(1, *p), ""));
+                parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), ""});
               }
               else
               {
@@ -158,7 +158,7 @@ ArgParser::parse_args(int argc, char** argv)
                 }
                 else
                 {
-                  parsed_options.push_back(ParsedOption(option->key, std::string(1, *p), argv[i + 1]));
+                  parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), argv[i + 1]});
                   ++i;
                 }
               }
@@ -172,13 +172,13 @@ ArgParser::parse_args(int argc, char** argv)
         }
         else
         {
-          parsed_options.push_back(ParsedOption(ArgParser::REST_ARG, "", "-"));
+          parsed_options.push_back(ParsedOption{ArgParser::REST_ARG, "", "-"});
         }
       }
     }
     else
     {
-      parsed_options.push_back(ParsedOption(ArgParser::REST_ARG, "", argv[i]));
+      parsed_options.push_back(ParsedOption{ArgParser::REST_ARG, "", argv[i]});
     }
   }
 

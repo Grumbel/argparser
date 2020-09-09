@@ -27,41 +27,20 @@ class ArgParser
 private:
   struct Option
   {
-    int key;
-    char        short_option;
-    std::string long_option;
-    std::string help;
-    std::string argument;
-    bool visible;
-
-    Option() :
-      key(),
-      short_option(),
-      long_option(),
-      help(),
-      argument(),
-      visible()
-    {}
+    int key = {};
+    char        short_option = {};
+    std::string long_option = {};
+    std::string help = {};
+    std::string argument = {};
+    bool visible = {};
   };
 
 public:
   struct ParsedOption
   {
-    int key;
-    std::string option;
-    std::string argument;
-
-    ParsedOption() :
-      key(-1),
-      option(),
-      argument()
-    {}
-
-    ParsedOption(int key_, const std::string& option_, const std::string& argument_) :
-      key(key_),
-      option(option_),
-      argument(argument_)
-    {}
+    int key = -1;
+    std::string option = {};
+    std::string argument = {};
   };
 
   enum {
@@ -71,9 +50,9 @@ public:
     PSEUDO    = -6
   };
 
-public:
   typedef std::vector<ParsedOption> ParsedOptions;
 
+public:
   ArgParser();
 
   ArgParser& add_usage(const std::string& usage);
