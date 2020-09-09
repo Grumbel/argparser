@@ -34,7 +34,7 @@ public:
   void print(std::string_view indent, std::string_view initial, std::string_view text) const;
 
 private:
-  int terminal_width;
+  int m_terminal_width;
   std::ostream& m_out;
 };
 

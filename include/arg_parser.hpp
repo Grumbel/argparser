@@ -80,10 +80,8 @@ private:
   Option const* lookup_long_option (const std::string& long_option) const;
 
 private:
-  std::string programm;
-
-  typedef std::vector<Option> Options;
-  Options options;
+  std::string m_programm;
+  std::vector<Option> m_options;
 };
 
 } // namespace argparser

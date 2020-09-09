@@ -22,8 +22,8 @@
 
 namespace argparser {
 
-PrettyPrinter::PrettyPrinter(int terminal_width_, std::ostream& out) :
-  terminal_width(terminal_width_),
+PrettyPrinter::PrettyPrinter(int terminal_width, std::ostream& out) :
+  m_terminal_width(terminal_width),
   m_out(out)
 {
 }
@@ -37,7 +37,7 @@ PrettyPrinter::print(std::string_view text) const
 void
 PrettyPrinter::print(std::string_view indent, std::string_view initial, std::string_view text) const
 {
-  const int width = terminal_width - static_cast<int>(indent.size()) - 1;
+  const int width = m_terminal_width - static_cast<int>(indent.size()) - 1;
 
   if (!initial.empty())
   {

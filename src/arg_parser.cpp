@@ -48,8 +48,8 @@ int get_terminal_width()
 namespace argparser {
 
 ArgParser::ArgParser() :
-  programm(),
-  options()
+  m_programm(),
+  m_options()
 {
 }
 
@@ -58,7 +58,7 @@ ArgParser::parse_args(int argc, char** argv)
 {
   ParsedOptions parsed_options;
 
-  programm = argv[0];
+  m_programm = argv[0];
 
   for(int i = 1; i < argc; ++i)
   {
@@ -188,7 +188,7 @@ ArgParser::parse_args(int argc, char** argv)
 ArgParser::Option const*
 ArgParser::lookup_short_option(char short_option) const
 {
-  for(auto const& opt : options)
+  for(auto const& opt : m_options)
   {
     if (opt.short_option == short_option) {
       return &opt;
@@ -200,7 +200,7 @@ ArgParser::lookup_short_option(char short_option) const
 ArgParser::Option const*
 ArgParser::lookup_long_option(const std::string& long_option) const
 {
-  for(auto const& opt : options)
+  for(auto const& opt : m_options)
   {
     if (opt.long_option == long_option) {
       return &opt;
@@ -217,7 +217,7 @@ ArgParser::print_help(std::ostream& out) const
   int column_width = column_min_width;
 
   { // Calculate left column width
-    for(auto const& opt : options)
+    for(auto const& opt : m_options)
     {
       int width = 2; // add two leading space
       if (opt.short_option) {
@@ -247,7 +247,7 @@ ArgParser::print_help(std::ostream& out) const
   PrettyPrinter pprint(terminal_width); // -1 so we have a whitespace on the right side
 
   bool first_usage = true;
-  for(auto const& opt : options)
+  for(auto const& opt : m_options)
   {
     if (opt.visible)
     {
@@ -255,12 +255,12 @@ ArgParser::print_help(std::ostream& out) const
       {
         if (first_usage)
         {
-          out << "Usage: " << programm << " " <<  opt.help << std::endl;
+          out << "Usage: " << m_programm << " " <<  opt.help << std::endl;
           first_usage = false;
         }
         else
         {
-          out << "       " << programm << " " << opt.help << std::endl;
+          out << "       " << m_programm << " " << opt.help << std::endl;
         }
       }
       else if (opt.key == TEXT)
@@ -315,7 +315,7 @@ ArgParser::add_usage(const std::string& usage)
   option.help         = usage;
   option.visible      = true;
 
-  options.push_back(option);
+  m_options.push_back(option);
 
   return *this;
 }
@@ -330,7 +330,7 @@ ArgParser::add_pseudo(const std::string& left, const std::string& doc)
   option.help         = doc;
   option.visible      = true;
 
-  options.push_back(option);
+  m_options.push_back(option);
 
   return *this;
 }
@@ -352,7 +352,7 @@ ArgParser::add_text(const std::string& text)
   option.help         = text;
   option.visible      = true;
 
-  options.push_back(option);
+  m_options.push_back(option);
 
   return *this;
 }
@@ -376,7 +376,7 @@ ArgParser::add_option(int key,
   option.argument     = argument;
   option.visible      = visible;
 
-  options.push_back(option);
+  m_options.push_back(option);
 
   return *this;
 }
