@@ -31,11 +31,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 add_library(argparser
-  src/arg_parser.cpp
-  src/pretty_printer.cpp)
+  src/argparser.cpp
+  src/prettyprinter.cpp)
 target_include_directories(argparser PUBLIC include/ src/)
 target_compile_options(argparser PRIVATE ${WARNINGS_CXX_FLAGS})
-set_target_properties(argparser PROPERTIES PUBLIC_HEADER "include/arg_parser.hpp")
+set_target_properties(argparser PROPERTIES PUBLIC_HEADER "include/argparser.hpp")
 
 if(BUILD_TESTS)
   enable_testing()

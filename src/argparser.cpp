@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "arg_parser.hpp"
+#include "argparser.hpp"
 
 #include <array>
 #include <assert.h>
@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include <sys/ioctl.h>
 
-#include "pretty_printer.hpp"
+#include "prettyprinter.hpp"
 
 namespace {
 
