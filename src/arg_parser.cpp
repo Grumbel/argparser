@@ -97,36 +97,29 @@ ArgParser::parse_args(int argc, char** argv)
 
           // Long Option
           Option const* option = lookup_long_option(long_opt);
+          if (!option) {
+            throw std::runtime_error("unrecognized option '" + std::string(argv[i]) + "'");
+          }
 
-          if (option)
+          if (option->argument.empty())
           {
-            if (option->argument.empty())
-            {
-              parsed_options.push_back(ParsedOption{option->key, long_opt, ""});
-            }
-            else
-            {
-              if (pos != std::string::npos)
-              {
-                parsed_options.push_back(ParsedOption{option->key, long_opt, long_opt_arg});
-              }
-              else
-              {
-                if (i == argc - 1)
-                {
-                  throw std::runtime_error("option '" + std::string(argv[i]) + "' requires an argument");
-                }
-                else
-                {
-                  parsed_options.push_back(ParsedOption{option->key, long_opt, argv[i + 1]});
-                  ++i;
-                }
-              }
-            }
+            parsed_options.push_back(ParsedOption{option->key, long_opt, ""});
           }
           else
           {
-            throw std::runtime_error("unrecognized option '" + std::string(argv[i]) + "'");
+            if (pos != std::string::npos)
+            {
+              parsed_options.push_back(ParsedOption{option->key, long_opt, long_opt_arg});
+            }
+            else
+            {
+              if (i == argc - 1) {
+                throw std::runtime_error("option '" + std::string(argv[i]) + "' requires an argument");
+              }
+
+              parsed_options.push_back(ParsedOption{option->key, long_opt, argv[i + 1]});
+              ++i;
+            }
           }
         }
       }
@@ -142,31 +135,24 @@ ArgParser::parse_args(int argc, char** argv)
           {
             // Short option(s)
             Option const* option = lookup_short_option(*p);
+            if (!option) {
+              throw std::runtime_error("invalid option -- " + std::string(1, *p));
+            }
 
-            if (option)
+            if (option->argument.empty())
             {
-              if (option->argument.empty())
-              {
-                parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), ""});
-              }
-              else
-              {
-                if (i == argc - 1 || *(p+1) != '\0')
-                {
-                  // No more arguments
-                  throw std::runtime_error("option requires an argument -- " + std::string(1, *p));
-                }
-                else
-                {
-                  parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), argv[i + 1]});
-                  ++i;
-                }
-              }
+              parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), ""});
             }
             else
             {
-              throw std::runtime_error("invalid option -- " + std::string(1, *p));
+              if (i == argc - 1 || *(p+1) != '\0') {
+                throw std::runtime_error("option requires an argument -- " + std::string(1, *p));
+              }
+
+              parsed_options.push_back(ParsedOption{option->key, std::string(1, *p), argv[i + 1]});
+              ++i;
             }
+
             ++p;
           }
         }
