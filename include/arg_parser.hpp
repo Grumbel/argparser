@@ -70,10 +70,6 @@ public:
   ParsedOptions parse_args(int argc, char** argv);
   void print_help(std::ostream& out) const;
 
-  bool next();
-  int  get_key();
-  std::string get_argument();
-
 private:
   void read_option(int id, const std::string& argument);
 
